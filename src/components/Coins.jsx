@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import axios from "axios";  
 import {server} from "../index"
-import { Container , HStack , VStack , Image, Heading,Text, Button } from '@chakra-ui/react';
+import { Container , HStack , VStack , Image, Heading,Text, Button, RadioGroup, Radio } from '@chakra-ui/react';
 import Loader from './Loader';
 import ErrorComponent  from './ErrorComponent';
 import CoinDetails from './CoinDetails';
@@ -23,7 +23,7 @@ function Coins() {
     React.useEffect(() => {
         const fetchCoins= async() =>{
            try{
-            const { data } = await axios.get(`${server}/coins/markets?vs_currency=${currency}&page=${page}`)
+            const { data } = await axios.get(`${server}/coins/market s?vs_currency=${currency}&page=${page}`)
 
             setCoins (data);
             setLoading(false);
@@ -43,7 +43,14 @@ if(error)
   return <Container maxW={"container.xl"}>
     {loading ? <Loader /> : 
     <> 
-    <HStack wrap={"wrap"}>
+    <RadioGroup value={currency} onChange={setCurrency} p={"8"}>
+        <HStack spacing={"4"}>
+            <Radio  value={"inr"}>INR</Radio>
+            <Radio value={"usd"}>USD</Radio>
+            <Radio value={"eur"}>EUR</Radio>
+        </HStack>
+    </RadioGroup>
+    <HStack wrap={"wrap"} justifyContent={"space-evenly"}>
         {Coins.map((i) => (
             <CoinCard 
             id={i.id}
