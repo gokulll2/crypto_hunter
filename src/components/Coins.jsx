@@ -23,7 +23,7 @@ function Coins() {
     React.useEffect(() => {
         const fetchCoins= async() =>{
            try{
-            const { data } = await axios.get(`${server}/coins/market s?vs_currency=${currency}&page=${page}`)
+            const { data } = await axios.get(`${server}/coins/markets?vs_currency=${currency}&page=${page}`)
 
             setCoins (data);
             setLoading(false);
@@ -31,7 +31,6 @@ function Coins() {
            catch(error){
             setError(true);
             setLoading(false);
-
            }
         };
         fetchCoins()
