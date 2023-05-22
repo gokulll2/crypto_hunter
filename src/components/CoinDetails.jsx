@@ -6,6 +6,7 @@ import { server } from '..';
 import { useParams } from 'react-router-dom';
 import ErrorComponent from './ErrorComponent';
 import React , { useEffect , useState } from "react"
+import { Chart } from 'chart.js';
 function CoinDetails() {
     const [Coin,setCoin]=React.useState([]);
     const [loading,setLoading]=React.useState(false)
@@ -39,7 +40,7 @@ function CoinDetails() {
         loading ? <Loader/> : (
             <> 
             <Box borderWidth={1} width={"full"} >
-
+                <Chart />
             </Box>
 
 
@@ -68,7 +69,8 @@ function CoinDetails() {
                 <StatLabel>
                     {Coin.name}
                 </StatLabel>
-                <StatNumber>{currencySymbo}{Coin?.market_data?.current_price[currency]} </StatNumber>
+                {/* .current_price[currency] */}
+                <StatNumber>{currencySymbo}{Coin.market_data} </StatNumber>
                 <StatHelpText>
                     <StatArrow type="decrease"/>
                 </StatHelpText>
@@ -79,26 +81,31 @@ function CoinDetails() {
             </Badge>
 
             <CustomBar 
-            high={`${currencySymbo}${Coin?.market_data?.high_24h[currency]} `}
-            low={`${currencySymbo}${Coin?.market_data?.low_24h[currency]} `}
+            // ?.high_24h[currency]
+            high={`${currencySymbo}${Coin?.market_data} `}
+            // ?.low_24h[currency]
+            low={`${currencySymbo}${Coin?.market_data}`}
             />
         </VStack>
 
         <Box  w={"full"}
             p={"4"}>
-
-            <Item title ={"Max Supply"} value={Coin.market_data.max_supply}/>
-
-            <Item title ={"Circulating Supply"} value={Coin.market_data.circulating_supply}/>
+            {/* .max_supply */}
+            <Item title ={"Max Supply"} value={Coin.market_data}/>
+            {/* .circulating_supply */}
+            <Item title ={"Circulating Supply"} value={Coin.market_data}/>
 
             <Item title ={"Market Cap"} 
-            value={`${currencySymbo}${Coin.market_data.market_cap[currency]}`}/>
+            // .market_cap[currency]
+            value={`${currencySymbo}${Coin.market_data}`}/>
 
               <Item title ={"All Time Low"} 
-            value={`${currencySymbo}${Coin.market_data.atl[currency]}`}/>
+            //   .atl[currency]
+            value={`${currencySymbo}${Coin.market_data}`}/>
 
               <Item title ={"All Time High"} 
-            value={`${currencySymbo}${Coin.market_data.ath[currency]}`}/>
+            //   ath[currency]
+            value={`${currencySymbo}${Coin.market_data}`}/>
         </Box>
             </>
         )
@@ -107,7 +114,7 @@ function CoinDetails() {
   )
 }
 
-const Item = (title,value) => (
+const Item = ({title,value}) => (
     <HStack justifyContent={"space-between"} w={"full"} my={"4"}>
         <Text fontFamily={"Bebas Neue"} letterSpacing={"wildest"}>
             {title}
