@@ -1,4 +1,4 @@
-import { Box, Container, HStack, Radio, RadioGroup, VStack , Text , Image } from '@chakra-ui/react'
+import { Box, Container, HStack, Radio, RadioGroup, VStack , Text , Image, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Badge, Progress } from '@chakra-ui/react'
 // import React from 'react'
 import Loader from './Loader';
 import axios from 'axios';
@@ -11,6 +11,7 @@ function CoinDetails() {
     const [loading,setLoading]=React.useState(false)
     const[error,setError]=React.useState(false);
     const[currency,setCurrency]=React.useState("inr")
+    const currencySymbo = currency==="inr" ? "₹" : currency==="eur" ? "€" : "$"
     const params = useParams()
     React.useEffect(() => {
         const fetchCoin= async () =>{
@@ -54,20 +55,64 @@ function CoinDetails() {
 
         <VStack spacing={"4"} p={"16"} alignItems={"flex-start"}>
             <Text fontSize={"small"} alignSelf={"center"} opacity={"0.7"} >
-                Last Updated On {Date().split("G")[0]}
+                Last Updated On {Date(Coin.market_data).split("G")[0]}
             </Text>
 
             <Image 
-            src={Coin.image.large} 
+            src={Coin.image} 
             w={"16"}
              h={"16"} 
             objectFit={"contain"}/>
+
+            <Stat>
+                <StatLabel>
+                    {Coin.name}
+                </StatLabel>
+                <StatNumber>{currencySymbo}{Coin.market_data.current_price[currency]} </StatNumber>
+                <StatHelpText>
+                    <StatArrow type="decrease"/>
+                </StatHelpText>
+            </Stat>
+
+            <Badge fontSize={"2xl"} bgColor={"blackAlpha.800"}>
+                {`#${Coin.market_cap_rank}`}
+            </Badge>
+
+            <CustomBar 
+            high={`${currencySymbo}${Coin.market_data.high_24h[currency]} `}
+            low={`${currencySymbo}${Coin.market_data.low_24h[currency]} `}
+            />
         </VStack>
+
+        <Box>
+            w={"full"}
+            p={"4"}
+            <Item title ={"Max Supply"} value={23231}/>
+        </Box>
             </>
         )
     }
    </Container>
   )
 }
+
+const Item = (title,value) => (
+    <HStack justifyContent={"space-between"} w={"full"} my={"4"}>
+        <Text fontFamily={"Bebas Neue"} letterSpacing={"wildest"}>
+            {title}
+        </Text>
+        <Text>
+            {value}
+        </Text>
+    </HStack>
+)
+const CustomBar=({high,low})=>(
+     <VStack>
+        <Progress value={50} colorScheme={"teal"} w={"full"} />
+        <HStack justifyContent={"space-between"} w={"full"}/>
+        <Badge children={low} colorScheme={"red"} />
+        <Badge children={high} colorScheme={"green"} />
+     </VStack>
+)
 
 export default CoinDetails
