@@ -13,7 +13,7 @@ function Coins() {
     const [page,setPage]=React.useState(1) 
     const[error,setError]=React.useState(false);
     const[currency,setCurrency]=React.useState("inr")
-  
+    const[next,setNext]=React.useState("")
     const changepage = (page) => {
         setPage(page)
         setLoading(true) 
@@ -35,6 +35,9 @@ function Coins() {
         };
         fetchCoins()
     },[currency,page])
+    const nextbtn = ((index) => {
+        setNext(index+1)
+    })
 if(error)
 {
     return <ErrorComponent message={"Error While Fetching Coins"} />
@@ -63,7 +66,8 @@ if(error)
         ))}
     </HStack>
     <HStack w={"full"} overflowX={"auto"} p={"8"}>
-        {
+        <button className='prev'>Prev</button>
+        {/* {
             btns.map((item,index)=>(
                 <Button  bgColor={"blackAlpha.900"} 
             color={"white"}
@@ -72,7 +76,21 @@ if(error)
         }}>{index+1}
         </Button>
             ))
-        }
+        } */
+
+       btns.map(() => {
+        <Button bgColor={"blackAlpha.900"}
+                color={"white"}
+                onClick={() => {
+                    
+                }}
+        >
+
+        </Button>
+       })
+  }
+
+        <button className='next' onClick={nextbtn()}>Next</button>
     </HStack>
     </> 
     }

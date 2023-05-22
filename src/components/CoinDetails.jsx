@@ -9,28 +9,27 @@ import React , { useEffect , useState } from "react"
 // import { Chart } from 'chart.js';
 import Chart from './Chart';
 function CoinDetails() {
-    const [Coin,setCoin]=React.useState({});
-    const [loading,setLoading]=React.useState(false)
-    const[error,setError]=React.useState(false);
-    const[currency,setCurrency]=React.useState("inr")
+    const [Coin,setCoin]=useState({});
+    const [loading,setLoading]=useState(true)
+    const[error,setError]=useState(false);
+    const[currency,setCurrency]=useState("inr")
 
-    const[days,setDays]=React.useState("24h")
-    const[chartArray,setChartArray]=React.useState([])
+    const[days,setDays]=useState("24h")
+    const[chartArray,setChartArray]=useState([])
 
     const currencySymbo = currency==="inr" ? "₹" : currency==="eur" ? "€" : "$"
     const params = useParams() 
     const btns=["24h" , "7d" , "14d" , "30d" , "60d" , "200d" , "1y" , "max"];
-    React.useEffect(() => {
+    useEffect(() => {
         const fetchCoin= async () =>{
             try{
-            setLoading(true)
              const { data } = await axios.get(`${server}/coins/${params.id}`)
-            //  console.log(data);
+             console.log(data);
             const {data:chartData} = await axios.get(`${server}/coins/${params.id}/market_chart?vs_currency=${currency}&days=${days}`)
             // console.log(chartData);
              setCoin(data);
              setChartArray(chartData.prices)
-             setLoading(false);
+             setLoading(false); 
             }
             catch(error){
              setError(true);
@@ -78,7 +77,7 @@ function CoinDetails() {
             </Text>
 
             <Image 
-            src={Coin?.image?.large} 
+            src={Coin.image.large} 
             w={"16"}
              h={"16"} 
             objectFit={"contain"}/>
