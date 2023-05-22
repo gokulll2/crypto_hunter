@@ -1,4 +1,4 @@
-import { Box, Container, HStack, Radio, RadioGroup, VStack , Text , Image, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Badge, Progress } from '@chakra-ui/react'
+import { Box, Container, HStack, Radio, RadioGroup, VStack , Text , Image, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Badge, Progress, Button } from '@chakra-ui/react'
 // import React from 'react'
 import Loader from './Loader';
 import axios from 'axios';
@@ -6,21 +6,30 @@ import { server } from '..';
 import { useParams } from 'react-router-dom';
 import ErrorComponent from './ErrorComponent';
 import React , { useEffect , useState } from "react"
-import { Chart } from 'chart.js';
+// import { Chart } from 'chart.js';
+import Chart from './Chart';
 function CoinDetails() {
-    const [Coin,setCoin]=React.useState([]);
+    const [Coin,setCoin]=React.useState({});
     const [loading,setLoading]=React.useState(false)
     const[error,setError]=React.useState(false);
     const[currency,setCurrency]=React.useState("inr")
+
+    const[days,setDays]=React.useState("24h")
+    const[chartArray,setChartArray]=React.useState([])
+
     const currencySymbo = currency==="inr" ? "₹" : currency==="eur" ? "€" : "$"
-    const params = useParams()
+    const params = useParams() 
+    const btns=["24h" , "7d" , "14d" , "30d" , "60d" , "200d" , "1y" , "max"];
     React.useEffect(() => {
         const fetchCoin= async () =>{
             try{
             setLoading(true)
              const { data } = await axios.get(`${server}/coins/${params.id}`)
-             console.log(data);
+            //  console.log(data);
+            const {data:chartData} = await axios.get(`${server}/coins/${params.id}/market_chart?vs_currency=${currency}&days=${days}`)
+            // console.log(chartData);
              setCoin(data);
+             setChartArray(chartData.prices)
              setLoading(false);
             }
             catch(error){
@@ -40,9 +49,18 @@ function CoinDetails() {
         loading ? <Loader/> : (
             <> 
             <Box borderWidth={1} width={"full"} >
-                <Chart />
+                <Chart arr={chartArray }currency={currencySymbo} days={days}/>
             </Box>
 
+            <HStack p="4" wrap={"wrap"}>
+                {
+                     btns.map((i) => (
+                        <Button>
+                            {i}
+                        </Button>
+                        ))
+                }
+            </HStack>
 
 
 
@@ -70,42 +88,45 @@ function CoinDetails() {
                     {Coin.name}
                 </StatLabel>
                 {/* .current_price[currency] */}
-                <StatNumber>{currencySymbo}{Coin.market_data} </StatNumber>
+                <StatNumber>{currencySymbo}{Coin?.market_data?.current_price[currency]} </StatNumber>
                 <StatHelpText>
-                    <StatArrow type="decrease"/>
+                    <StatArrow type={
+                        Coin?.market_data?.price_change_percentage_24h>0
+                        ? "increase" : "decrease"
+                    }/>
                 </StatHelpText>
             </Stat>
 
-            <Badge fontSize={"2xl"} bgColor={"blackAlpha.800"}>
+            <Badge fontSize={"2xl"} bgColor={"blackAlpha.100"}>
                 {`#${Coin?.market_cap_rank}`}
             </Badge>
 
             <CustomBar 
             // ?.high_24h[currency]
-            high={`${currencySymbo}${Coin?.market_data} `}
+            high={`${currencySymbo}${Coin?.market_data?.high_24h[currency]} `}
             // ?.low_24h[currency]
-            low={`${currencySymbo}${Coin?.market_data}`}
+            low={`${currencySymbo}${Coin?.market_data?.low_24h[currency]}`}
             />
         </VStack>
 
         <Box  w={"full"}
             p={"4"}>
             {/* .max_supply */}
-            <Item title ={"Max Supply"} value={Coin.market_data}/>
+            <Item title ={"Max Supply"} value={Coin?.market_data?.max_supply}/>
             {/* .circulating_supply */}
-            <Item title ={"Circulating Supply"} value={Coin.market_data}/>
+            <Item title ={"Circulating Supply"} value={Coin?.market_data?.circulating_supply}/>
 
             <Item title ={"Market Cap"} 
             // .market_cap[currency]
-            value={`${currencySymbo}${Coin.market_data}`}/>
+            value={`${currencySymbo}${Coin?.market_data?.market_cap[currency]}`}/>
 
               <Item title ={"All Time Low"} 
             //   .atl[currency]
-            value={`${currencySymbo}${Coin.market_data}`}/>
+            value={`${currencySymbo}${Coin?.market_data?.atl[currency]}`}/>
 
               <Item title ={"All Time High"} 
             //   ath[currency]
-            value={`${currencySymbo}${Coin.market_data}`}/>
+            value={`${currencySymbo}${Coin?.market_data?.ath[currency]}`}/>
         </Box>
             </>
         )

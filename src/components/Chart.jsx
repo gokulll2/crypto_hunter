@@ -8,8 +8,19 @@ ChartJS.register(
 
 const Chart = ({arr=[] , currency , days}) => {
 
-    const price=[1,2,34];
-    const date=["12/2/22" , "23/2/23" ,"32/2/33"];
+    const prices=[];
+    const date=[];
+    
+    for (let i = 0; i < arr.length; i++) {
+        if(days==="24h")
+        {
+            date.push(new Date(arr[i][0]).toLocaleTimeString());
+        }
+        else{
+            date.push(new Date(arr[i][0]).toLocaleDateString());
+        }
+      prices.push(arr[i][1]);
+    }
     const data={
         labels: date,
         datasets: [
