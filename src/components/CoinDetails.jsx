@@ -55,11 +55,11 @@ function CoinDetails() {
 
         <VStack spacing={"4"} p={"16"} alignItems={"flex-start"}>
             <Text fontSize={"small"} alignSelf={"center"} opacity={"0.7"} >
-                Last Updated On {Date(Coin.market_data).split("G")[0]}
+                Last Updated On {Date(Coin?.market_data).split("G")[0]}
             </Text>
 
             <Image 
-            src={Coin.image} 
+            src={Coin?.image?.large} 
             w={"16"}
              h={"16"} 
             objectFit={"contain"}/>
@@ -68,26 +68,37 @@ function CoinDetails() {
                 <StatLabel>
                     {Coin.name}
                 </StatLabel>
-                <StatNumber>{currencySymbo}{Coin.market_data.current_price[currency]} </StatNumber>
+                <StatNumber>{currencySymbo}{Coin?.market_data?.current_price[currency]} </StatNumber>
                 <StatHelpText>
                     <StatArrow type="decrease"/>
                 </StatHelpText>
             </Stat>
 
             <Badge fontSize={"2xl"} bgColor={"blackAlpha.800"}>
-                {`#${Coin.market_cap_rank}`}
+                {`#${Coin?.market_cap_rank}`}
             </Badge>
 
             <CustomBar 
-            high={`${currencySymbo}${Coin.market_data.high_24h[currency]} `}
-            low={`${currencySymbo}${Coin.market_data.low_24h[currency]} `}
+            high={`${currencySymbo}${Coin?.market_data?.high_24h[currency]} `}
+            low={`${currencySymbo}${Coin?.market_data?.low_24h[currency]} `}
             />
         </VStack>
 
-        <Box>
-            w={"full"}
-            p={"4"}
-            <Item title ={"Max Supply"} value={23231}/>
+        <Box  w={"full"}
+            p={"4"}>
+
+            <Item title ={"Max Supply"} value={Coin.market_data.max_supply}/>
+
+            <Item title ={"Circulating Supply"} value={Coin.market_data.circulating_supply}/>
+
+            <Item title ={"Market Cap"} 
+            value={`${currencySymbo}${Coin.market_data.market_cap[currency]}`}/>
+
+              <Item title ={"All Time Low"} 
+            value={`${currencySymbo}${Coin.market_data.atl[currency]}`}/>
+
+              <Item title ={"All Time High"} 
+            value={`${currencySymbo}${Coin.market_data.ath[currency]}`}/>
         </Box>
             </>
         )
