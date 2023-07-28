@@ -3,7 +3,7 @@ import React from "react";
 
 const avatarSrc = "https://avatars.";
 
-const footer = () => {
+const Foot = () => {
   return (
     <Box
       bgColor={"blackAlpha.900"}
@@ -34,4 +34,4 @@ const footer = () => {
   );
 };
 
-export default footer;
+export default Foot;

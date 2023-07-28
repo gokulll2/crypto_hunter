@@ -5,7 +5,7 @@ import Home from "./components/Home";
 import CoinDetails from "./components/CoinDetails";
 import Coins from "./components/Coins";
 import Exchanges from "./components/Exchanges";
-
+import Foot from "./components/Foot";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
 
     </Routes>
 
-    <footer />
+    <Foot />
 
   </Router>
   );
