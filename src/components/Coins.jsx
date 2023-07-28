@@ -142,7 +142,7 @@ function Coins() {
             >
               2
             </Button>
-            {/* {btn>3 && <p>...</p>} */}
+            {btn>3 && <p>...</p>}
             <Button
               bgColor={"blackAlpha.900"}
               color={"white"}
